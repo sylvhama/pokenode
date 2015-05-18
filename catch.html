@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Pokenode</title>
+		<link type="text/css" rel="stylesheet" href="./css/style.css">
+	</head>
+	<body>
+		<section><article id="catch"><button type="button" id="pokeball">Pokeball go!</button></article></section>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+		  var socket = io.connect('http://pokenode.herokuapp.com/');		  
+		  var used = false;
+		  var room = '';
+		  socket.on('errorRoom', function (data) {
+		    document.getElementById("catch").innerHTML = '<h1>Error!</h1>';
+			socket.disconnect();
+		  });
+		  socket.on('closeRoom', function (data) {
+		    if(!used) document.getElementById("catch").innerHTML = '<h1>Connection lost!</h1>';
+			socket.disconnect();
+		  });
+		  socket.on('roomJoined', function (data) {
+		    room = data.room;
+		  });
+		  var element = document.getElementById('pokeball');
+		  if (element.addEventListener) element.addEventListener('click', pokeballGo, false);
+		  else if (element.attachEvent) element.attachEvent('onClick', pokeballGo);
+		  
+		  function pokeballGo() {
+		    if(!used) {
+			  used = true;
+			  document.getElementById("catch").innerHTML = '<h1>You used pokeball!</h1>';
+			  socket.emit('pokeball',{});
+			  socket.disconnect();
+			}
+		  }
+		</script>
+	</body>
+</html>

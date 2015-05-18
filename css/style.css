@@ -1,0 +1,11 @@
+article, footer {
+	text-align:center;
+}
+
+h1, button {
+  font-size: 3em;
+}
+
+button {
+  margin-top: 50px;
+}

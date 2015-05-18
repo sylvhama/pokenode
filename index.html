@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Pokenode</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta name="description" content="Catch a Pokemon with Node.js and WebSockets! by Sylvain Hamann">
+		<meta property="og:title" content="Pokenode">
+		<meta property="og:type" content="Website">
+		<meta property="og:url" content="http://pokenode.herokuapp.com/">
+		<meta property="og:description" content="Catch a Pokemon with Node.js and WebSockets! by Sylvain Hamann">
+		<meta property="og:image" content="http://i.imgur.com/IW5tHhf.png">
+		<meta property="og:site_name" content="Pokenode">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:creator" content="@sylvhama">
+		<link type="text/css" rel="stylesheet" href="./css/style.css">
+	</head>
+	<body>
+		<section><article id="pokemon"><p><img src="http://image.noelshack.com/fichiers/2013/01/1388388767-loader.gif" alt="loading"/></p></article></section>
+		<footer><p>By <a href="http://shamann.fr/en/">Sylvain Hamann</a></p></footer>
+		<script src="./socket.io/socket.io.js"></script>
+		<script>
+		  var socket = io.connect('http://pokenode.herokuapp.com/');
+		  var pokemon = '';
+		  socket.emit('askPokemon');
+		  socket.on('pokemon', function (data) {
+		    pokemon = data.pokemon;
+			document.getElementById("pokemon").innerHTML = '<h1>A wild ' + pokemon + ' appears!</h1><p><img src="http://img.pokemondb.net/artwork/' + pokemon.toLowerCase() + '.jpg" alt="Pokenode" /></p><h2>Scan and catch!</h2><p>' + data.qr + '</p>';
+		  });
+		  socket.on('caught', function (data) {
+			document.getElementById("pokemon").innerHTML = '<h1>' + pokemon + ' was caught!</h1><p><img src="http://i.imgur.com/IW5tHhf.png" alt="Pokenode" /></p>';
+			socket.disconnect();
+		  });
+		</script>
+	</body>
+</html>
